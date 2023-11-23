@@ -1,41 +1,47 @@
 create table if not exists musical_genre(
-id_musical_genre serial primary key not null,
-name_genre VARCHAR(30) not null
+id_musical_genre serial primary key,
+name_genre VARCHAR(30) not null UNIQUE
 );
 
 create table if not exists list_of_performers(
-id_list_of_performers serial primary key not null,
-pseudonym VARCHAR(30) not null,
-Full_Name VARCHAR(60) not null
+id_list_of_performers serial primary key,
+pseudonym VARCHAR(30) not null UNIQUE,
+Full_Name VARCHAR(60) not null UNIQUE
 );
 
 create table if not exists genre_performers(
-id_genre_performers serial primary key not null,
+id_genre_performers serial primary key,
 id_musical_genre integer not null references musical_genre(id_musical_genre),
 id_list_of_performers integer not null references list_of_performers(id_list_of_performers)
 );
 
 create table if not exists album_list(
-id_album_list serial primary key not null,
+id_album_list serial primary key,
 name VARCHAR(30) not null,
 year_of_issue date not null
 );
 
 create table if not exists album_performers(
-id_album_performers serial primary key not null,
+id_album_performers serial primary key,
 id_album_list integer not null references album_list(id_album_list),
 id_list_of_performers integer not null references list_of_performers(id_list_of_performers)
 );
 
 create table if not exists track_list(
-id_track_list serial primary key references album_list(id_album_list),
+id_track_list serial primary key,
 name VARCHAR(30) not null,
-duration VARCHAR(60) not null
+duration integer not null,
+id_album_list integer not null references album_list(id_album_list)
 );
 
 create table if not exists collection(
-id_collection serial primary key not null,
+id_collection serial primary key,
 name VARCHAR(30) not null,
-year_of_issue date not null,
-id_track_list integer not null references track_list(id_track_list)
+year_of_issue date not null
+);
+
+create table if not exists track_collection(
+id_track_collection serial primary key,
+id_track_list integer not null references track_list(id_track_list),
+id_collection integer not null references collection(id_collection)
 );
